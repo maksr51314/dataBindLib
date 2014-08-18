@@ -34,7 +34,7 @@ $('#template').render(hello);
 * **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML
 * **View logic in JavaScript** - No crippled micro-template language, just plain JavaScript functions
 
-Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for IE8 requires jQuery.
+Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers.
 
 [![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
 
@@ -43,47 +43,26 @@ Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mo
 * IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
 * Google Groups: transparencyjs@googlegroups.com
 
-## Fiddle
-
-[Try Transparency](http://leonidas.github.com/transparency/) with interactive examples.
-
 ## Install
 
 ```
 curl https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js
 
-# Or with Bower
-npm install -g bower
-bower install transparency
-```
-
 #### Require with script tags
 
 ```html
-<script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
 
 #### or with AMD
 
 ```javascript
-require(['jquery', 'transparency'], function($, Transparency) {
+require(['transparency'], function(Transparency) {
 
   // Without jQuery
   Transparency.render(document.getElementById('template'), data);
-
-  // With jQuery
-  jQuery.fn.render = Transparency.jQueryPlugin;
-  $('#template').render(data);
 });
 ```
-
-#### Node.js
-
-`npm install transparency`
-
-For server-side use, see
-[examples/hello-server](https://github.com/leonidas/transparency/tree/master/examples/hello-server).
 
 ## API documentation
 

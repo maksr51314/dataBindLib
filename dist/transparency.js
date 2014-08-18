@@ -55,6 +55,7 @@
         Instance
         ;
 
+
     /** ---------------------------------- Underscore ---------------------------------- **/
     _.toString = Object.prototype.toString;
 
@@ -298,7 +299,6 @@
             console.log( "Transparency.render:", context, models, directives, options );
         }
 
-
         if ( !context ) {
             return;
         }
@@ -353,24 +353,25 @@
             this.instanceCache = [];
         }
 
-        Context.prototype.render = helpers.before( detach )( helpers.after( attach )( helpers.chainable( function ( models, directives, options ) {
-            var children, index, instance, model, _i, _len, _results;
+        Context.prototype.render = helpers.before( detach )( helpers.after( attach )( helpers.chainable(
+            function ( models, directives, options ) {
+                var children, index, instance, model, _i, _len, _results;
 
-            while ( models.length < this.instances.length ) {
-                this.instanceCache.push( this.instances.pop(  ).remove(  ) );
-            }
-            while ( models.length > this.instances.length ) {
-                instance = this.instanceCache.pop(  ) || new Instance( helpers.cloneNode( this.template ), this.Transparency );
-                this.instances.push( instance.appendTo( this.el ) );
-            }
-            _results = [];
-            for ( index = _i = 0, _len = models.length; _i < _len; index = ++_i ) {
-                model = models[index];
-                instance = this.instances[index];
-                children = [];
-                _results.push( instance.prepare( model, children ).renderValues( model, children ).renderDirectives( model, index, directives ).renderChildren( model, children, directives, options ) );
-            }
-            return _results;
+                while ( models.length < this.instances.length ) {
+                    this.instanceCache.push( this.instances.pop(  ).remove(  ) );
+                }
+                while ( models.length > this.instances.length ) {
+                    instance = this.instanceCache.pop(  ) || new Instance( helpers.cloneNode( this.template ), this.Transparency );
+                    this.instances.push( instance.appendTo( this.el ) );
+                }
+                _results = [];
+                for ( index = _i = 0, _len = models.length; _i < _len; index = ++_i ) {
+                    model = models[index];
+                    instance = this.instances[index];
+                    children = [];
+                    _results.push( instance.prepare( model, children ).renderValues( model, children ).renderDirectives( model, index, directives ).renderChildren( model, children, directives, options ) );
+                }
+                return _results;
         })));
 
         return Context;
@@ -620,6 +621,7 @@
             this.Transparency = Transparency;
             this.queryCache = {};
             this.childNodes = _.toArray( template.childNodes );
+            debugger;
             this.elements = helpers.getElements( template );
         }
 

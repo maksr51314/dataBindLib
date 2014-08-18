@@ -13,7 +13,19 @@
             <span data-bind="name"></span>
         </div>
 
+
+        <script src="vendor/bonzo.js"></script>
         <script src="dist/transparency.js"></script>
+        <script src="dist/bind.js"></script>
+        <script>
+            var hello = {
+                greeting: 'Hello',
+                name:     'world!'
+            };
+
+            Bind.render(document.getElementById('template'), hello);
+        </script>
+
         <script>
             var hello = {
                 greeting: 'Hello',

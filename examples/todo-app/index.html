@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To-do List</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="../../dist/transparency.js"></script>
+  </head>
+  <body>
+    <h1>To-do List</h1>
+    <form id="add-task">
+      <input type="text" name="task" />
+      <input type="submit" value="Add" />
+    </form>
+
+    <table id="tasks">
+      <tr>
+        <td class="task">task name</td><td><a class="delete" href="#">delete</a></td>
+      </tr>
+    </table>
+
+    <script type="text/javascript">
+        var data;
+        data = [
+            {
+                task: "Foo"
+            }, {
+                task: "Bar"
+            }
+        ];
+        $(document).ready(function() {
+                    var input, tasks;
+                input = $('input[name="task"]');
+                tasks = $('#tasks');
+                tasks.on('update', function() {
+        return tasks.render(data);
+        });
+        $('#add-task').submit(function(event) {
+                event.preventDefault();
+                data.push({
+                    task: input.val()
+                });
+                input.val("");
+        return tasks.trigger('update');
+        });
+        tasks.on('click', '.delete', function(event) {
+                    var model;
+                model = event.target.transparency.model;
+                data = _.reject(data, function(e) {
+        return e.task === model.task;
+        });
+        return tasks.trigger('update');
+        });
+        return tasks.trigger('update');
+        });
+    </script>
+  </body>
+</html>

@@ -1,8 +1,47 @@
 'use strict';
 
-//     Transparency.js 1.0.0
-//     ( c ) 2014 Romaniv Maksym, DocumentCloud and Investigative Reporters & Editors
-//     Transparency may be freely distributed under the MIT license.
+/**
+ * Transparency.js 1.6.0
+ * ( c ) 2014 Romaniv Maksym, DocumentCloud and Investigative Reporters & Editors
+ * Transparency may be freely distributed under the MIT license.
+ *
+ *    Template:
+ *    //
+ *    //  <ul id="todos">
+ *    //    <li class="todo"></li>
+ *    //  </ul>
+ *
+ *    template = document.querySelector('#todos');
+ *
+ *     models = [
+ *       {todo: "Eat"},
+ *       {todo: "Do some programming"},
+ *       {todo: "Sleep"}
+ *     ];
+ *
+ *     Transparency.render(template, models);
+ *
+ *     //  Result:
+ *     //  <ul id="todos">
+ *     //    <li class="todo">Eat</li>
+ *     //    <li class="todo">Do some programming</li>
+ *     //    <li class="todo">Sleep</li>
+ *     //   </ul>
+ *
+ * ----------------------------------------------------------------------------------
+ *
+ *      In general:
+ *      Transparency.render = function ( context, models, directives, options)
+ *
+ *      context
+ *      models
+ *      directives
+ *      options: {
+ *          debug : false
+ *      }
+ *
+ *
+ */
 
 (function() {
 
@@ -19,6 +58,10 @@
     /** ---------------------------------- Underscore ---------------------------------- **/
     _.toString = Object.prototype.toString;
 
+    /**
+     * @param obj
+     * @returns {Array}
+     */
     _.toArray = function ( obj ) {
         var i,
             arr = new Array( obj.length );
@@ -29,33 +72,61 @@
         return arr;
     };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isString = function ( obj ) {
         return _.toString.call( obj ) === '[object String]';
     };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isNumber = function ( obj ) {
         return _.toString.call( obj ) === '[object Number]';
     };
 
+    /**
+     * @param obj
+     * @returns {Boolean}
+     */
     _.isArray = Array.isArray ||
         function ( obj ) {
             return _.toString.call( obj ) === '[object Array]';
         };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isDate = function ( obj ) {
         return _.toString.call( obj ) === '[object Date]';
     };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isElement = function ( obj ) {
         return !!( obj && obj.nodeType === 1 );
     };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isPlainValue = function ( obj ) {
         var type;
         type = typeof obj;
         return ( type !== 'object' && type !== 'function' ) || _.isDate( obj );
     };
 
+    /**
+     * @param obj
+     * @returns {boolean}
+     */
     _.isBoolean = function ( obj ) {
         return obj === true || obj === false;
     };
@@ -67,6 +138,10 @@
     helpers.ELEMENT_NODE = 1;
     helpers.TEXT_NODE = 3;
 
+    /**
+     * @param decorator
+     * @returns {Function}
+     */
     helpers.before = function ( decorator ) {
         return function ( method ) {
             return function (  ) {
@@ -76,6 +151,10 @@
         };
     };
 
+    /**
+     * @param decorator
+     * @returns {Function}
+     */
     helpers.after = function ( decorator ) {
         return function ( method ) {
             return function (  ) {
@@ -85,10 +164,17 @@
         };
     };
 
+    /**
+     * @type {Function}
+     */
     helpers.chainable = helpers.after( function (  ) {
         return this;
-    } );
+    });
 
+    /**
+     * @param el
+     * @returns {Array}
+     */
     helpers.getElements = function ( el ) {
         var elements = [];
 
@@ -96,6 +182,12 @@
         return elements;
     };
 
+    /**
+     * @param template
+     * @param elements
+     * @returns {Array}
+     * @private
+     */
     _getElements = function ( template, elements ) {
         var child, _results;
 
@@ -111,6 +203,9 @@
         return _results;
     };
 
+    /**
+     * @returns {boolean}
+     */
     html5Clone = function (  ) {
         return document.createElement( 'nav' ).cloneNode( true ).outerHTML !== '<:nav></:nav>';
     };
@@ -140,10 +235,20 @@
 
     expando = 'transparency';
 
+    /**
+     * @param element
+     * @returns {Object}
+     */
     helpers.data = function ( element ) {
         return element[expando] || ( element[expando] = {} );
     };
 
+    /**
+     * @param child
+     * @param parent
+     * @returns {Object}
+     * @private
+     */
     __extends = function ( child, parent ) {
         var key;
         for ( key in parent ) {
@@ -189,7 +294,10 @@
             options = {};
         }
 
-        console.log( "Transparency.render:", context, models, directives, options );
+        if (options.debug) {
+            console.log( "Transparency.render:", context, models, directives, options );
+        }
+
 
         if ( !context ) {
             return;
@@ -211,27 +319,6 @@
     Transparency.matcher = function ( element, key ) {
         return element.el.id === key || [].indexOf.call( element.classNames, key ) >= 0 || element.el.name === key || element.el.getAttribute( 'data-bind' ) === key;
     };
-
-    //add method 'render' to jquery
-    if ( typeof jQuery !== "undefined" && jQuery !== null ) {
-        if ( jQuery ) {
-            jQuery.fn.render = helpers.chainable( function ( models, directives, options ) {
-                var context, _i, _len, _results;
-
-                _results = [];
-                for ( _i = 0, _len = this.length; _i < _len; _i++ ) {
-                    context = this[_i];
-                    _results.push( Transparency.render( context, models, directives, options ) );
-                }
-                return _results;
-            } );
-        }
-    }
-
-    //init Transparency in general scope
-    if ( typeof window !== "undefined" && window !== null ) {
-        window.Transparency = Transparency;
-    }
 
     /** ---------------------------------- Transparency ---------------------------------- **/
 
@@ -289,10 +376,13 @@
         return Context;
 
     })();
-   /** ---------------------------------- Context ---------------------------------- **/
+    /** ---------------------------------- Context ---------------------------------- **/
 
 
-   /** ---------------------------------- ElementFactory ---------------------------------- **/
+    /** ---------------------------------- ElementFactory ---------------------------------- **/
+    /**
+     * @enum {{Elements: {input: {}}, createElement: createElement}}
+     */
     ElementFactory = {
         Elements: {
             input: {}
@@ -309,7 +399,7 @@
         }
     };
 
-    Element = ( function (  ) {
+    Element = (function () {
         /**
          * @param el
          * @constructor
@@ -844,6 +934,30 @@
 
     })( Attribute );
     /** -------------------------------------- Attribute Factory -------------------------------------- **/
+
+
+    /** -------------------------------------- Init -------------------------------------- **/
+    //add method 'render' to jquery
+    if ( typeof jQuery !== "undefined" && jQuery !== null ) {
+        if ( jQuery ) {
+            jQuery.fn.render = helpers.chainable( function ( models, directives, options ) {
+                var context, _i, _len, _results;
+
+                _results = [];
+                for ( _i = 0, _len = this.length; _i < _len; _i++ ) {
+                    context = this[_i];
+                    _results.push( Transparency.render( context, models, directives, options ) );
+                }
+                return _results;
+            } );
+        }
+    }
+
+    //init Transparency in general scope
+    if ( typeof window !== "undefined" && window !== null ) {
+        window.Transparency = Transparency;
+    }
+    /** -------------------------------------- Init -------------------------------------- **/
 
 })();
 

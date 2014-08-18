@@ -4,7 +4,8 @@
 //     ( c ) 2014 Romaniv Maksym, DocumentCloud and Investigative Reporters & Editors
 //     Transparency may be freely distributed under the MIT license.
 
-( function(  ) {
+(function() {
+
     /** Definition **/
     var _ = {},
         helpers = {}, expando, html5Clone, _getElements, __extends,
@@ -233,6 +234,7 @@
     }
 
     /** ---------------------------------- Transparency ---------------------------------- **/
+
 
     /** ---------------------------------- Context ---------------------------------- **/
     Context = ( function () {
@@ -687,6 +689,7 @@
 
     })();
     /** ---------------------------------- Instance ---------------------------------- **/
+
 
     /** -------------------------------------- Attribute Factory -------------------------------------- **/
     AttributeFactory = {

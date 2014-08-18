@@ -8,11 +8,20 @@
     </head>
     <body>
 
-        <!--Here is example of data bindings-->
+        <div id="template" style="color: green">
+            <span class="greeting"></span>
+            <span data-bind="name"></span>
+        </div>
 
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <script src="dist/transparency.js"></script>
+        <script>
+            var hello = {
+                greeting: 'Hello',
+                name:     'world!'
+            };
 
-        <script src="js/vendor/bonzo/bonzo.js"></script>
-        <script src="js/data-bind-lib/data-bind-lib.js"></script>
+            Transparency.render(document.getElementById('template'), hello);
+        </script>
+
     </body>
 </html>

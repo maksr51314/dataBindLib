@@ -1,5 +1,52 @@
+'use strict';
+
+/**
+ * Transparency.js 1.6.0
+ * ( c ) 2014 Romaniv Maksym, DocumentCloud and Investigative Reporters & Editors
+ * Transparency may be freely distributed under the MIT license.
+ *
+ *    Template:
+ *    //
+ *    //  <ul id="todos">
+ *    //    <li class="todo"></li>
+ *    //  </ul>
+ *
+ *    template = document.querySelector('#todos');
+ *
+ *     models = [
+ *       {todo: "Eat"},
+ *       {todo: "Do some programming"},
+ *       {todo: "Sleep"}
+ *     ];
+ *
+ *     Bind.render(template, models);
+ *
+ *     //  Result:
+ *     //  <ul id="todos">
+ *     //    <li class="todo">Eat</li>
+ *     //    <li class="todo">Do some programming</li>
+ *     //    <li class="todo">Sleep</li>
+ *     //   </ul>
+ *
+ * ----------------------------------------------------------------------------------
+ *
+ *      In general:
+ *      Bind.render = function ( context, models, directives, options)
+ *
+ *      context
+ *      models
+ *      directives
+ *      options: {
+ *          debug : false
+ *      }
+ *
+ *
+ */
+
 (function() {
-    var Context;
+    var render_,
+        addModelToCtx_,
+        renderListOfItems_;
 
     var root = window;
 
@@ -7,12 +54,16 @@
 
     root.Bind = Bind;
 
-    if (!bonzo) {console.error('Bonzo module/library doesn\'t exists')};
+    if (!bonzo) { console.error('Bonzo module/library doesn\'t exists') };
 
-
+    /**
+     * @param context
+     * @param models
+     * @param directives
+     * @param options
+     * @returns {Element}
+     */
     Bind.render = function(context, models, directives, options) {
-        var base;
-
         if ( !models ) {
             models = [];
         }
@@ -24,21 +75,14 @@
         }
 
         if (options.debug) {
-            console.log( "Transparency.render:", context, models, directives, options );
+            console.log( "Bind.render:", context, models, directives, options );
         }
 
         if ( !context ) {
             return;
         }
 
-        if ( !Array.isArray( models ) ) {
-            models = [models];
-        }
-
-        var context = new Context(context, Transparency);
-
-        return context.render ( models, directives, options).el;
-
+        return render_ ( context, models, directives, options );
     };
 
     /**
@@ -53,40 +97,82 @@
             element.getAttribute( 'data-bind' ) === key;
     };
 
-    Context  = function (el, Transparency) {
-        this.el = el;
-        this.bind = Transparency;
-        this.bEl = bonzo(el);
+    /**
+     * @param context
+     * @param model
+     * @param directives
+     * @param options
+     * @returns {Element}
+     * @private
+     */
+    render_ = function( context, model, directives, options ) {
+        if ( Array.isArray( model ) ) {
+            renderListOfItems_( context, model );
+        } else {
+            addModelToCtx_( context, model );
+        }
+
+        return context;
     };
 
-    Context.prototype.render = function ( models, directives, options ) {
-        var self = this;
+    /**
+     * @param ctx
+     * @param model
+     * @returns {Element}
+     * @private
+     */
+    addModelToCtx_ = function ( ctx, model ) {
+        var keys, child,
+            i, j;
 
-        models.forEach(function(modelObject) {
-            var keys = Object.keys(modelObject);
+        keys = Object.keys(model);
 
+        for (i = 0; i < keys.length; i++) {
+            for (j = 0; j < ctx.children.length; j++) {
+                child = ctx.children[j];
+                if (Bind.matcher( child, keys[i] )) {
+                    if (child.children.length) {
+                        addModelToCtx_(ctx.children[j], model[keys[i]]);
+                    }
 
+                    if ( Array.isArray( model ) ) {
+                        renderListOfItems_( ctx, model );
+                    }
 
-//            keys.forEach(function(key) {
-//                self.el.children.forEach(function(child) {
-//                    if ( Bind.matcher(child, key) ) {
-//                        child.text()
-//                    }
-//                });
-//            });
+                    if ((typeof model[ keys[i] ] != "object") || (model[ keys[i] ] == null)) {
+                        bonzo(child).text( model[ keys[i] ] );
+                    }
 
+                }
+            }
+        }
 
-        });
+        return ctx;
     };
 
 
+    /**
+     * @param context
+     * @param model
+     * @private
+     */
+    renderListOfItems_ = function( context, model ) {
+        var i, childEl, ctx, childs = [], cloneChildEl ;
 
+        ctx = bonzo( context );
+        childEl = context.children[0];
 
+        for (i = 0; i < model.length; i++ ) {
+            cloneChildEl = childEl.cloneNode(true);
+            bonzo( cloneChildEl ).text( model[i] ).addClass( model[i] );
 
+            childs.push( cloneChildEl );
+        }
+        //delete first element example
+        bonzo(childEl).remove();
 
-
-
-
-
+        //render list of elements
+        ctx.append( childs );
+    };
 
 })();

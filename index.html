@@ -13,10 +13,24 @@
             <span data-bind="name"></span>
         </div>
 
+        <ul id="activities" style="color: green">
+            <li class="activity"></li>
+        </ul>
+
+        <div id="person">
+            <div class="firstname"></div>
+            <div class="lastname"></div>
+            <div class="address">
+                <div class="street" style="margin-left: 30px"></div>
+                <div class="zip" style="margin-left: 30px"></div>
+                <span class="city"  style="margin-left: 30px"></span>
+            </div>
+        </div>
+
 
         <script src="vendor/bonzo.js"></script>
-        <script src="dist/transparency.js"></script>
         <script src="dist/bind.js"></script>
+
         <script>
             var hello = {
                 greeting: 'Hello',
@@ -24,16 +38,25 @@
             };
 
             Bind.render(document.getElementById('template'), hello);
-        </script>
 
-        <script>
-            var hello = {
-                greeting: 'Hello',
-                name:     'world!'
+            var person = {
+                firstname: 'John',
+                lastname:  'Wayne',
+                address: {
+                    street: '4th Street',
+                    city:   'San Francisco',
+                    zip:    '94199'
+                }
             };
 
-            Transparency.render(document.getElementById('template'), hello);
+            Bind.render(document.getElementById('person'), person);
+
+            var activities = [ 'Jogging', 'Gym', 'Sky Diving' ];
+
+            Bind.render(document.getElementById('activities'), activities);
         </script>
+
+
 
     </body>
 </html>

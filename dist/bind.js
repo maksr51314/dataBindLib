@@ -132,11 +132,11 @@
                 child = ctx.children[j];
                 if (Bind.matcher( child, keys[i] )) {
                     if (child.children.length) {
-                        addModelToCtx_(ctx.children[j], model[keys[i]]);
+                        addModelToCtx_( child, model[keys[i]]);
                     }
 
-                    if ( Array.isArray( model ) ) {
-                        renderListOfItems_( ctx, model );
+                    if ( Array.isArray( model[keys[i]] ) ) {
+                        renderListOfItems_( child, model[keys[i]] );
                     }
 
                     if ((typeof model[ keys[i] ] != "object") || (model[ keys[i] ] == null)) {

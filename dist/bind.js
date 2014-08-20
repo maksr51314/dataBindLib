@@ -145,6 +145,11 @@
 
                 }
             }
+
+            //TODO: render object inside array
+//            if (!ctx.children) {
+//                bonzo( ctx ).append( '<div></div>').text( keys[i] );
+//            }
         }
 
         return ctx;
@@ -162,17 +167,33 @@
         ctx = bonzo( context );
         childEl = context.children[0];
 
+        //delete other child elements if it exists
+        while (context.firstChild) {
+            context.removeChild(context.firstChild);
+        }
+
+        //add new child elements to childs array
         for (i = 0; i < model.length; i++ ) {
             cloneChildEl = childEl.cloneNode(true);
-            bonzo( cloneChildEl ).text( model[i] ).addClass( model[i] );
+
+            //TODO: render object inside array
+//            if ((typeof model[i]  == "object") && (model[i]  !== null)) {
+//                cloneChildEl = addModelToCtx_( cloneChildEl, model[i] );
+//            } else {
+                bonzo( cloneChildEl )
+                    .text( model[i])
+                    .addClass( ('' + model[i]) );
+//            }
 
             childs.push( cloneChildEl );
         }
         //delete first element example
-        bonzo(childEl).remove();
+        bonzo( childEl ).remove();
 
         //render list of elements
         ctx.append( childs );
     };
+
+    //TODO: class duplicates when list render twice and more
 
 })();
